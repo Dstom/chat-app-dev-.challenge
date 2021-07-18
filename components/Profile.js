@@ -28,7 +28,7 @@ export default function Profile() {
             <div className="bg-purple-black w-full pl-8 pr-5 py-4 flex items-center justify-between" >
                 <div className="flex items-center gap-5">
 
-                    <ProfileModal image={session.user.image} />
+                    <ProfileModal image={ session && session.user.image} />
                     <h1 className="text-gris">{session && session.user.name}</h1>
                 </div>
 
