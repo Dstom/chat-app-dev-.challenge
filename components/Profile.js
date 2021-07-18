@@ -17,6 +17,7 @@ const logoutHandler = () => {
     signOut();
 }
 
+
 export default function Profile() {
 
     const [session, loading] = useSession();
@@ -27,11 +28,10 @@ export default function Profile() {
             <div className="bg-purple-black w-full pl-8 pr-5 py-4 flex items-center justify-between" >
                 <div className="flex items-center gap-5">
 
-                <img className="h-12 w-12 rounded-lg" 
-                        src={session.user.image} /> 
+                    <ProfileModal image={session.user.image} />
                     <h1 className="text-gris">{session && session.user.name}</h1>
                 </div>
-                
+
                 <Menu as="div" className="relative">
                     {({ open }) => (
                         <>
@@ -52,13 +52,9 @@ export default function Profile() {
                             >
                                 <Menu.Items
                                     static
-                                    className="bg-purple-mid origin-top-right absolute -top-24 right-0 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    className="bg-purple-mid origin-top-right absolute -top-12 right-0 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none"
                                 >
-                                    <Menu.Item>
-                                        {({ active }) => (
-                                            <ProfileModal />
-                                        )}
-                                    </Menu.Item>
+
                                     <Menu.Item>
                                         {({ active }) => (
                                             <button onClick={logoutHandler}

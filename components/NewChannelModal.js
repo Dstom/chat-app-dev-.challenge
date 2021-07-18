@@ -9,13 +9,13 @@ import { channelStartAddNew } from '../actions/channels';
 export default function NewChannelModal() {
 
     const [isOpen, setIsOpen] = useState(false);
+    const [errors, setErrors] = useState({ name: '', description: '' })
 
     const inputName = useRef();
-
-    
     const inputDescription = useRef();
 
     const dispatch = useDispatch();
+
     function closeModal() {
         setIsOpen(false)
     }
@@ -29,12 +29,33 @@ export default function NewChannelModal() {
 
         const enteredName = inputName.current.value;
         const enteredDescription = inputDescription.current.value;
+
+        if (!enteredName) { setErrors((prevState) => { return { ...prevState, name: 'Enter a name for your channel' } }) }
+
+        if (!enteredDescription) {
+            setErrors((prevState) => {
+                return {
+                    ...prevState,
+                    description: 'Enter a description for your channel'
+                }
+            }
+            )
+        }
+        if (enteredName) { setErrors((prevState) => { return { ...prevState, name: '' } }) }
+        if (enteredDescription) { setErrors((prevState) => { return { ...prevState, description: '' } }) }
+
+        if (!enteredName || !enteredDescription) {
+            return;
+        }
+
         dispatch(channelStartAddNew(
             {
                 name: enteredName.trim(),
                 description: enteredDescription.trim()
             }
         ))
+        closeModal();
+
     }
     return (
         <>
@@ -88,12 +109,14 @@ export default function NewChannelModal() {
                                 </Dialog.Title>
                                 <form onSubmit={handleSubmit}>
                                     <div className="mt-2">
+                                        <label className="text-red-600">{(errors.name) && errors.name}</label>
                                         <input
                                             ref={inputName}
                                             className="ring-indigo-700 mb-4 w-full placeholder-gris bg-true-gray py-1 rounded-lg text-white pl-4" placeholder="Channel Name" />
                                     </div>
 
                                     <div className="mt-2">
+                                        <label className="text-red-600">{(errors.description) && errors.description}</label>
                                         <textarea rows="3" placeholder="Description"
 
                                             ref={inputDescription}
@@ -104,7 +127,6 @@ export default function NewChannelModal() {
                                         <button
                                             type="submit"
                                             className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                            onClick={closeModal}
                                         >
                                             Save
                                         </button>
@@ -116,10 +138,6 @@ export default function NewChannelModal() {
                     </div>
                 </Dialog>
             </Transition>
-
-
         </>
-
-
     )
 }

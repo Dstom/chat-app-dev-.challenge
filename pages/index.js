@@ -11,8 +11,6 @@ export default function HomePage() {
   )
 }
 
-HomePage.layout="YES";
-
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 

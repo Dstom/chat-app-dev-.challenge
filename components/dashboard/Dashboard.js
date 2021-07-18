@@ -25,7 +25,7 @@ const Dashboard = ({ children }) => {
                     leaveFrom="translate-x-0"
                     leaveTo="-translate-x-80"
                 >
-                    <div className="fixed inset-y-0 left-0  max-w-full flex z-50">
+                    <div className="fixed inset-y-0 left-0  max-w-full flex z-10">
                         <ChannelSidebar />
                     </div>
 

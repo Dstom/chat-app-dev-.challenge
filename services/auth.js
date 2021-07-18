@@ -1,4 +1,5 @@
 import { dataURLtoFile, toDataURL } from "../lib/urlToFile";
+import { formDataImage } from "../lib/formDataImage";
 
 const defaultUrlImage = "https://res.cloudinary.com/dvrqeszak/image/upload/v1624706217/default_mprgsi.png";
 export const createUser = async (email, password, username) => {
@@ -22,10 +23,3 @@ export const createUser = async (email, password, username) => {
     return data;
 }
 
-function formDataImage(inputData) {
-    let formData = new FormData();
-    Object.keys(inputData).forEach(fieldName => {
-        formData.append(fieldName, inputData[fieldName]);
-    })
-    return formData
-}

@@ -1,29 +1,21 @@
 import 'tailwindcss/tailwind.css'
 
 import { Provider } from 'next-auth/client';
-
 import { Provider as ReduxProvider } from 'react-redux';
 import { useStore } from '../store/store';
 import Dashboard from '../components/dashboard/Dashboard';
-import { Fragment } from 'react';
 import { useRouter } from 'next/router';
-import Login from '../components/Login';
-
-
-const layouts = {
-  YES: Dashboard,
-  NO: Fragment
-};
 
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
 
   const router = useRouter();
   const { pathname } = router;
-  
-  /*console.log(Component);
-  const Layout = layouts[Component.layout] || ((children) => <>{children}</>);
-  console.log(Layout);*/
+
+  const sessionOptions = {
+    clientMaxAge: 60, // Re-fetch session if cache is older than 2 hours
+    keepAlive: 60 * 60 // Send keepAlive message every hour
+  };
 
   return (
     <ReduxProvider store={store}>

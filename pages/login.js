@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/client';
 import Login from '../components/Login';
 
-
-
 const LoginPage = () => {
 
     const [isLoading, setIsLoading] = useState(true);

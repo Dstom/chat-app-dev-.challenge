@@ -12,9 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { channelSetActive, channelStartJoinChannel } from '../../actions/channels';
 import React from 'react';
 
-import { compareAsc, format } from 'date-fns'
-
-
+import {  format } from 'date-fns'
 
 function Room({ messagesBD }) {
 
@@ -38,7 +36,6 @@ function Room({ messagesBD }) {
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView()
-        console.log(chats);
     }, [chats])
 
     useEffect(() => {
@@ -58,23 +55,16 @@ function Room({ messagesBD }) {
         const channel = pusher.subscribe(`chat${id}`);
 
         channel.bind("chat-event", function (data) {
-            console.log("data", data);
             const incChatDate = new Date(data.date)
             //  const newChatDate = data.date.toDateString();
-            const dateKey = incChatDate.toDateString();
-
-            console.log(incChatDate, dateKey);
-            console.log("binding", chats);
+            const dateKey = incChatDate.toDateString();           
 
             setChats((prevState) => {
-                console.log(prevState);
                 if (Object.keys(prevState).length === 0 && prevState.constructor === Object) {
-                    console.log("Chats empty", prevState);
                     return {
                         [dateKey]: [data]
                     }
                 } else {
-                    console.log("Chats is not empty", prevState);
 
                     return {
                         ...prevState,
@@ -91,9 +81,7 @@ function Room({ messagesBD }) {
 
     const handleChange = (e) => {
         messageToSendRef.current = e.target.value
-    }
-
-    
+    }    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -126,9 +114,7 @@ function Room({ messagesBD }) {
             return acc;
         }, {});
     }
-
-
-
+    
     return (
         <>
             {
@@ -139,8 +125,7 @@ function Room({ messagesBD }) {
                             {
                                 chats && Object.keys(chats).map((item, id) => (
                                     <Fragment
-                                        key={item}>
-                                        {console.log(item)}
+                                        key={item}>                                        
 
                                         <div className="flex items-center mb-4">
                                             <div className="bg-gris flex-grow h-px" ></div>
@@ -200,8 +185,6 @@ function Room({ messagesBD }) {
         </>
     );
 }
-
-Room.layout = "YES"
 export default Room
 
 
@@ -219,7 +202,8 @@ export async function getServerSideProps(context) {
     }
 
     const { id } = context.params;
-    const res = await fetch(`http://localhost:3000/api/messages/getMessages`, {
+
+    const res = await fetch(`${process.env.API_URL}/messages/getMessages`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

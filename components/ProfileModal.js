@@ -1,13 +1,18 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react';
-
+import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/solid';
+import { editAvatar } from '../services/edtAvatar';
 
 
-export default function ProfileModal() {
+export default function ProfileModal({ image }) {
 
     const [isOpen, setIsOpen] = useState(false);
 
+    const [file, setFile] = useState(null);
+
+
+    const fileInputRef = useRef();
 
     function closeModal() {
         setIsOpen(false)
@@ -17,21 +22,44 @@ export default function ProfileModal() {
         setIsOpen(true)
     }
 
+    const handleFileUpload = (e) => {
+        if (e.target.files[0]) {
+            setFile(
+                //URL.createObjectURL(e.target.files[0])
+                e.target.files[0]
+            )
+        }
+
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (file) {
+            const resp = editAvatar(file)
+            console.log(resp);
+        }
+    }
+
+    editAvatar
     return (
         <>
-            <button
+            {/* <button
                 onClick={openModal}
                 className='flex items-center w-full px-6 py-2 text-sm text-white'
 
             >
                 <UserIcon className="w-4 h-4 mr-4" />Your Profile
-            </button>
+            </button> */}
+
+            <img className="h-12 w-12 rounded-lg cursor-pointer"
+                onClick={openModal}
+                src={image} />
 
             <Transition appear show={isOpen} as={Fragment}>
                 <Dialog
                     as="div"
                     className="fixed inset-0 z-10 overflow-y-auto"
-                    onClose={closeModal}                    
+                    onClose={closeModal}
                 >
 
                     <div className="min-h-screen px-4 text-center">
@@ -70,28 +98,37 @@ export default function ProfileModal() {
                                 >
                                     Profile
                                 </Dialog.Title>
-                                <div className="mt-2">
-                                    <input className="w-full placeholder-gris bg-true-gray py-1 rounded-lg text-white pl-4" placeholder="My username" />
-                                    <p>RAAAAAAAAAAAAA</p>
+                                <div className="mt-2 flex justify-center">
+                                    {
+                                        (file) ? <img src={URL.createObjectURL(file)} width={200} height={200} /> :
+                                            <Image src={image} width={200} height={200} />
+                                    }
                                 </div>
 
-                                <div className="mt-4">
+                                <form className="mt-4" onSubmit={handleSubmit}>
+                                    <input
+                                        onChange={handleFileUpload}
+                                        ref={fileInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        multiple={false}
+                                    />
                                     <button
                                         type="button"
+                                        onClick={() => fileInputRef.current.click()}
                                         className="mr-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                        onClick={closeModal}
                                     >
                                         Upload Avatar
                                     </button>
 
                                     <button
-                                        type="button"
+                                        type="submit"
                                         className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                        onClick={closeModal}
                                     >
                                         Save
                                     </button>
-                                </div>
+                                </form>
+
                             </div>
                         </Transition.Child>
                     </div>
