@@ -88,7 +88,7 @@ function Room({ messagesBD }) {
         e.preventDefault();
 
         const msgToSend = messageToSendRef.current;
-        const resp = await fetch("/api/pusher", {
+        const resp = await fetch(`${process.env.API_URL}/pusher`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
