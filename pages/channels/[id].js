@@ -81,7 +81,9 @@ function Room({ messagesBD }) {
     }, [id]);
 
     const handleChange = (e) => {
-        messageToSendRef.current = e.target.value
+        if (messageToSendRef.current.length < 255) {
+            messageToSendRef.current = e.target.value
+        }
     }
 
     const handleSubmit = async (e) => {

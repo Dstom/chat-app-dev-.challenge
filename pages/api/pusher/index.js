@@ -11,8 +11,7 @@ export const pusher = new Pusher({
     appId: process.env.app_id,
     key: process.env.key,
     secret: process.env.secret,
-    cluster: process.env.cluster,
-    useTLS: true,
+    cluster: process.env.cluster
 });
 
 export default async function handler(req, res) {
@@ -27,6 +26,7 @@ export default async function handler(req, res) {
     /* Find the user  */
     const userEmail = session.user.email;
     const user = await User.findOne({ email: userEmail });
+    console.log(userEmail, user);
     /* Creating message */
 
     const messageToBd = new Message();
@@ -36,16 +36,17 @@ export default async function handler(req, res) {
 
     const messageSaved = await messageToBd.save();
 
-    //   messageSaved.popuplate('sender').execPopulate();
     /* Adding message to channel */
-    const channel = await Channel.findById({ _id: channelId });
-    channel.messages.push(messageSaved._id);
+    await Channel.findByIdAndUpdate(channelId,
+        { "$push": { "messages": messageSaved._id } },
+        { "new": true }
+    );
 
 
-    const messageFinded = await Message.findById({ _id: messageSaved._id }).populate('sender').lean();
-    
+    const messageFound = await Message.findById({ _id: messageSaved._id }).populate('sender').lean();
+
     await pusher.trigger(`chat${channelId}`, "chat-event", {
-        ...messageFinded
+        ...messageFound
     });
 
 
