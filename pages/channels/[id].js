@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { channelSetActive, channelStartJoinChannel } from '../../actions/channels';
 import React from 'react';
 
-import {  format } from 'date-fns'
+import { format } from 'date-fns'
 
 function Room({ messagesBD }) {
 
@@ -32,10 +32,12 @@ function Room({ messagesBD }) {
     useEffect(() => {
         // setChats(messagesBD);
         setChats(groupByDate(messagesBD));
+
     }, [messagesBD])
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView()
+        console.log("raaa");
     }, [chats])
 
     useEffect(() => {
@@ -49,6 +51,7 @@ function Room({ messagesBD }) {
     }, [id, userChannels])
 
     useEffect(() => {
+        console.log(process.env.NEXT_PUBLIC_KEY);
         const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY, {
             cluster: "us2",
         });
@@ -56,8 +59,7 @@ function Room({ messagesBD }) {
 
         channel.bind("chat-event", function (data) {
             const incChatDate = new Date(data.date)
-            //  const newChatDate = data.date.toDateString();
-            const dateKey = incChatDate.toDateString();           
+            const dateKey = incChatDate.toDateString();
 
             setChats((prevState) => {
                 if (Object.keys(prevState).length === 0 && prevState.constructor === Object) {
@@ -65,13 +67,12 @@ function Room({ messagesBD }) {
                         [dateKey]: [data]
                     }
                 } else {
-
                     return {
                         ...prevState,
                         [dateKey]: [...prevState[dateKey], data]
                     }
                 }
-            })  
+            })
         });
 
         return () => {
@@ -81,7 +82,7 @@ function Room({ messagesBD }) {
 
     const handleChange = (e) => {
         messageToSendRef.current = e.target.value
-    }    
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -114,7 +115,7 @@ function Room({ messagesBD }) {
             return acc;
         }, {});
     }
-    
+
     return (
         <>
             {
@@ -125,7 +126,7 @@ function Room({ messagesBD }) {
                             {
                                 chats && Object.keys(chats).map((item, id) => (
                                     <Fragment
-                                        key={item}>                                        
+                                        key={item}>
 
                                         <div className="flex items-center mb-4">
                                             <div className="bg-gris flex-grow h-px" ></div>
