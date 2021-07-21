@@ -9,7 +9,7 @@ import { getSession } from 'next-auth/client';
 
 import ContentEditable from 'react-contenteditable'
 import { useDispatch, useSelector } from 'react-redux';
-import { channelSetActive, channelStartJoinChannel } from '../../actions/channels';
+import { channelOpenSidebarToggle, channelSetActive, channelSidebarToggle, channelStartJoinChannel } from '../../actions/channels';
 import React from 'react';
 
 import { format } from 'date-fns'
@@ -50,7 +50,10 @@ function Room({ messagesBD }) {
             dispatch(channelSetActive({
                 channel
             }))
+
+            dispatch(channelOpenSidebarToggle())
         }
+        console.log(scrollRef.current);        
 
     }, [id, userChannels])
 
@@ -64,6 +67,7 @@ function Room({ messagesBD }) {
         channel.bind("chat-event", function (data) {
             const incChatDate = new Date(data.date)
             const dateKey = incChatDate.toDateString();
+            console.log(data);
 
             setChats((prevState) => {
                 if (Object.keys(prevState).length === 0 && prevState.constructor === Object) {
@@ -136,7 +140,7 @@ function Room({ messagesBD }) {
             {
                 activeChannel?.channel.isMember ?
                     <>
-                        <div className="px-10 md:px-20 py-5 flex-grow scrollbar-thin scrollbar-thumb-purple-black scrollbar-purple overflow-y-scroll "
+                        <div className="px-10 lg:px-20 py-5 flex-grow scrollbar-thin scrollbar-thumb-purple-black scrollbar-purple overflow-y-scroll "
                         >
                             {
                                 chats && Object.keys(chats).map((item, id) => (
@@ -169,7 +173,7 @@ function Room({ messagesBD }) {
                                 ))
                             }
                         </div>
-                        <div className="w-full px-10 md:px-20 pb-6 bottom-0">
+                        <div className="w-full px-10 lg:px-20 pb-6 bottom-0">
                             <form className="relative w-full" onSubmit={handleSubmit}>
                                 <div className="rounded-lg bg-blue-600 w-10 h-10 absolute top-2 right-2 flex items-center justify-center">
                                     <button type="submit">

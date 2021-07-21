@@ -64,6 +64,19 @@ export const channelSidebarToggle = () => {
     }
 }
 
+export const channelOpenSidebarToggle = () => {
+    return {
+        type: types.channelOpenSidebarToggle
+    }
+}
+
+export const channelCloseSidebarToggle = () => {
+    return {
+        type: types.channelCloseSidebarToggle
+    }
+}
+
+
 export const channelStartJoinChannel = (id) => {
     return async (dispatch) => {
         try {

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { channelSetActive, channelSidebarToggle } from '../actions/channels';
+import { channelOpenSidebarToggle, channelSetActive, channelSidebarToggle } from '../actions/channels';
 
 const ChannelItem = ({ acronym, channelName, id, channel }) => {
 
@@ -13,7 +13,7 @@ const ChannelItem = ({ acronym, channelName, id, channel }) => {
             channel
         }))
 
-        dispatch(channelSidebarToggle())
+        dispatch(channelOpenSidebarToggle())
         router.push(`/channels/${id}`)
     }
 

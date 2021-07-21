@@ -23,10 +23,15 @@ export const channelReducer = (state = initialState, action) => {
                 ...state,
                 activeChannel: action.payload
             }
-        case types.channelSidebarToggle:
+        case types.channelOpenSidebarToggle:
             return {
                 ...state,
-                sidebarToggle: !state.sidebarToggle
+                sidebarToggle: true
+            }
+        case types.channelCloseSidebarToggle:
+            return {
+                ...state,
+                sidebarToggle: false
             }
         case types.channelJoinChannel: {
             console.log(action.payload);

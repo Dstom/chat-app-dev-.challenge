@@ -22,6 +22,9 @@ const MessageSchema = Schema({
     }
 })
 
+MessageSchema.methods.saveAndPopulate = function(doc) {
+    return doc.save().then(doc => doc.populate('sender').execPopulate())
+};
 
 //module.exports = model('Message', MessageSchema);
 

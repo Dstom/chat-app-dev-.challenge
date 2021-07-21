@@ -1,5 +1,7 @@
 import Pusher from "pusher";
-import { getSession } from "next-auth/client";
+import {
+    getSession
+} from "next-auth/client";
 
 
 import Channel from "../../../models/Channel";
@@ -16,40 +18,55 @@ export const pusher = new Pusher({
 
 export default async function handler(req, res) {
 
-    const { message, channelId } = req.body;
+    const {
+        message,
+        channelId
+    } = req.body;
 
-    const session = await getSession({ req: req });
+    const session = await getSession({
+        req: req
+    });
     if (!session) {
-        res.status(401).json({ message: 'Not authenticated' });
+        res.status(401).json({
+            message: 'Not authenticated'
+        });
         return;
     }
+
+    if (!message || !channelId) {
+        return;
+    }
+
     /* Find the user  */
     const userEmail = session.user.email;
-    const user = await User.findOne({ email: userEmail });
-    console.log(userEmail, user);
-    /* Creating message */
+    const user = await User.findOne({
+        email: userEmail
+    });
 
+    /* Creating message */
     const messageToBd = new Message();
     messageToBd.text = message;
     messageToBd.sender = user._id;
     messageToBd.channel = channelId;
 
     const messageSaved = await messageToBd.save();
-
-    /* Adding message to channel */
-    await Channel.findByIdAndUpdate(channelId,
-        { "$push": { "messages": messageSaved._id } },
-        { "new": true }
-    );
-
-
-    const messageFound = await Message.findById({ _id: messageSaved._id }).populate('sender').lean();
+    const messageFound = await Message.populate(messageSaved, 'sender');
 
     await pusher.trigger(`chat${channelId}`, "chat-event", {
-        ...messageFound
+        _id: messageFound._id,
+        date: messageFound.date,
+        text: messageFound.text,
+        sender: messageFound.sender,
+        channel: messageFound.channel
     });
 
-
-    res.json({ message: "completed" });
+    /* Adding message to channel */
+    await Channel.findByIdAndUpdate(channelId, {
+        "$push": {
+            "messages": messageSaved._id
+        }
+    });
+    res.json({
+        message: "completed"
+    });
 }
-

@@ -1,6 +1,6 @@
 import { PlusIcon, SearchIcon, ChevronLeftIcon } from '@heroicons/react/solid';
 import { useDispatch, useSelector } from 'react-redux';
-import { channelSidebarToggle } from '../actions/channels';
+import { channelCloseSidebarToggle, channelSidebarToggle } from '../actions/channels';
 import ChannelList from './ChannelList'
 import NewChannelModal from './NewChannelModal';
 import Profile from './Profile';
@@ -13,7 +13,8 @@ const ChannelSidebar = () => {
 
     const dispatch = useDispatch();
     const closeSidebar = () => {
-        dispatch(channelSidebarToggle())
+        //     dispatch(channelSidebarToggle())
+        dispatch(channelCloseSidebarToggle());
     }
     return (
         <>
