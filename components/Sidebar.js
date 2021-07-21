@@ -4,6 +4,10 @@ import ChannelList from './ChannelList'
 import NewChannelModal from './NewChannelModal';
 import Profile from './Profile';
 
+import { Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+
 const Sidebar = () => {
 
     const [inputSearch, setInputSearch] = useState("");
@@ -11,13 +15,25 @@ const Sidebar = () => {
     const handleChange = (e) => {
         setInputSearch(e.target.value)
     }
+
+    const [sidebarChannels, setSidebarChannels] = useState(true)
+    //             -translate-x-full md:translate-x-0 
+    //   const {} = useSelector(state => state.channel)
+
     return (
         <>
-            <div className="hidden md:flex h-screen  flex-col w-80 bg-purple-mid text-white font-bold" >
+            <div className={`${sidebarChannels ? 'translate-x-0' : '-translate-x-full'}
+            translate-x-0 md:-translate-full
+            flex
+             z-10 
+            absolute  transform  md:relative  transition duration-200 ease-in-out      
+            h-screen  flex-col w-80 bg-purple-mid text-white font-bold`} >
 
                 <div className="w-80 pl-8 pr-5 py-4 
-                flex justify-between shadow-md items-center">
-                    <h1 className="text-lg">Channels</h1>
+                                    flex justify-between shadow-md items-center">
+                    <h1 className="text-lg"
+                        onClick={() => setSidebarChannels(prev => !prev)}
+                    >Channels</h1>
 
                     <NewChannelModal />
                 </div>
@@ -37,6 +53,8 @@ const Sidebar = () => {
                 <Profile />
 
             </div>
+
+
         </>
 
 

@@ -8,12 +8,13 @@ import ChannelSidebar from '../ChannelSidebar';
 
 const Dashboard = ({ children }) => {
 
-    const { sidebarToggle, activeChannel, userChannels } = useSelector(state => state.channel);
+    const { sidebarToggle } = useSelector(state => state.channel);
 
     return (
         <>
             <div className="flex ">
                 <Sidebar />
+
 
                 <Transition
                     as={Fragment}
@@ -25,7 +26,7 @@ const Dashboard = ({ children }) => {
                     leaveFrom="translate-x-0"
                     leaveTo="-translate-x-80"
                 >
-                    <div className="fixed inset-y-0 left-0  max-w-full flex z-10">
+                    <div className="fixed inset-y-0 left-0  max-w-full flex z-20">
                         <ChannelSidebar />
                     </div>
 

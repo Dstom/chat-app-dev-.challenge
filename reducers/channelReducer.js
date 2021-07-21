@@ -2,8 +2,7 @@ import { types } from '../types/types';
 const initialState = {
     userChannels: [],
     activeChannel: null,
-    sidebarToggle: false
-
+    sidebarToggle: false,
 }
 
 export const channelReducer = (state = initialState, action) => {
@@ -42,6 +41,7 @@ export const channelReducer = (state = initialState, action) => {
                 )
             }
         }
+        
         default:
             return state;
     }

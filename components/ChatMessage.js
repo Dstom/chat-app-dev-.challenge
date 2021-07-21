@@ -27,7 +27,7 @@ const ChatMessage = ({ date, text, sender, id, senderProfile }) => {
             />
             <div>
                 <h1 className="text-gris text-lg font-bold"> {sender} <span className="text-sm font-medium">{formatDate(date)}</span> </h1>
-                <p className="text-white">{text}</p>
+                <p className="text-white break-all">{text}</p>
             </div>
         </div>
     );
