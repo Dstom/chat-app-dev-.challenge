@@ -13,7 +13,7 @@ const Sidebar = () => {
     }
     return (
         <>
-            <div className="h-screen flex flex-col w-80 bg-purple-mid text-white font-bold" >
+            <div className="hidden md:flex h-screen  flex-col w-80 bg-purple-mid text-white font-bold" >
 
                 <div className="w-80 pl-8 pr-5 py-4 
                 flex justify-between shadow-md items-center">

@@ -20,11 +20,31 @@ const handler = async (req, res) => {
     const userEmail = session.user.email;
 
     const { id } = req.body;
-    
-    console.log(id);
-    //Updated user and channel
 
-    const userUpdated = await User.findOneAndUpdate(
+    const userUpdated = await User.findOne({ "email": userEmail });
+
+    // const userUpdated = await User.findOneAndUpdate({ "email": userEmail }, { "$addToSet": { "channels": id } });
+    /* const channelUpdated = await Channel.findByIdAndUpdate(id,
+         { "$addToSet": { "members": userUpdated._id } },
+         { "new": true }
+     )*/
+
+    const channelUpdated = await Channel.updateOne({ "_id": id },
+        { "$addToSet": { "members": userUpdated._id } },
+    )
+    if (channelUpdated && channelUpdated.nModified === 0) {
+        return res.status(200).json({
+            ok: false,
+            message: 'User is already in this channel'
+        })
+    }
+
+    res.status(201).json({
+        ok: true,
+        userUpdated
+    });
+
+    /*const userUpdated = await User.findOneAndUpdate(
         { "email": userEmail },
         { "$push": { "channels": id } },
         { "new": true }
@@ -35,13 +55,7 @@ const handler = async (req, res) => {
     await Channel.findByIdAndUpdate(id,
         { "$push": { "members": userUpdated._id } },
         { "new": true }
-    );
-
-    res.status(201).json({
-        ok: true,
-        userUpdated
-    });
-
+    );*/
 }
 
 export default handler;

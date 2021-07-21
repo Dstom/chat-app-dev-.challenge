@@ -13,6 +13,8 @@ import { channelSetActive, channelStartJoinChannel } from '../../actions/channel
 import React from 'react';
 
 import { format } from 'date-fns'
+import TextareaAutosize from 'react-textarea-autosize';
+
 
 function Room({ messagesBD }) {
 
@@ -20,6 +22,8 @@ function Room({ messagesBD }) {
     const dispatch = useDispatch()
 
     const [chats, setChats] = useState({});
+    const [messageInput, setMessageInput] = useState('');
+
 
     const { activeChannel, userChannels } = useSelector(state => state.channel);
 
@@ -86,19 +90,28 @@ function Room({ messagesBD }) {
         }
     }
 
+    const handleMessageInputChange = (e) => {
+        setMessageInput(e.target.value)
+    }
+
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault();    
 
-        const msgToSend = messageToSendRef.current;
-        const resp = await fetch('/api/pusher', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
+        if (messageInput.length > 0 && messageInput.length <= 255) {
 
-            body: JSON.stringify({ message: msgToSend, channelId: id })
-        })
-        console.log(await resp.json());
+            const msgToSend = messageInput;
+            const resp = await fetch('/api/pusher', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({ message: msgToSend, channelId: id })
+            })
+            setMessageInput('');
+            console.log(await resp.json());
+        }
+
     };
 
     const joinChannel = () => {
@@ -156,7 +169,7 @@ function Room({ messagesBD }) {
                                 ))
                             }
                         </div>
-                        <div className="w-full px-20 pb-6 bottom-0">
+                        <div className="w-full px-10 md:px-20 pb-6 bottom-0">
                             <form className="relative w-full" onSubmit={handleSubmit}>
                                 <div className="rounded-lg bg-blue-600 w-10 h-10 absolute top-2 right-2 flex items-center justify-center">
                                     <button type="submit">
@@ -164,12 +177,19 @@ function Room({ messagesBD }) {
                                     </button>
                                 </div>
 
-                                <ContentEditable
+                                {/* <ContentEditable
                                     html={messageToSendRef.current}
                                     onChange={handleChange}
                                     className="rounded-lg py-4 pl-6 pr-12  break-all block overflow-hidden resize-none w-full bg-true-gray text-white" role="textbox"
-                                />
+                                /> */}
 
+                                <TextareaAutosize
+                                    className="rounded-lg py-4 pl-6 pr-12  break-all block overflow-hidden resize-none w-full bg-true-gray text-white"
+                                    maxRows={5}
+                                    value={messageInput}
+                                    onChange={handleMessageInputChange}
+                                    maxLength={255}
+                                />
                             </form>
 
                         </div>

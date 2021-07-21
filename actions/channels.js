@@ -72,8 +72,11 @@ export const channelStartJoinChannel = (id) => {
 
             if (body.ok) {
                 console.log(body);
-                dispatch(channelJoinChannel(id,body.userUpdated))
+                dispatch(channelJoinChannel(id, body.userUpdated))
+            } else {
+                console.log(body);
             }
+
         } catch (error) {
             console.log("Error: ", error)
 
@@ -85,6 +88,6 @@ export const channelStartJoinChannel = (id) => {
 const channelJoinChannel = (channelId, user) => {
     return {
         type: types.channelJoinChannel,
-        payload: {channelId, user}
+        payload: { channelId, user }
     }
 }
